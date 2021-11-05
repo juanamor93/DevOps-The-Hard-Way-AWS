@@ -26,7 +26,7 @@ jobs:
           terraform init \
             -backend-config "bucket=terraform-state-devopsthehardway-juan-am" \
             -backend-config "key=eks-terraform-workernodes.tfstate"
-          terraform workspace new dev || terraform workspace select dev
+            
       - name: Terraform Format
         working-directory: Terraform-AWS-Services-Creation/EKS-With-Worker-Nodes/
         run: terraform fmt
