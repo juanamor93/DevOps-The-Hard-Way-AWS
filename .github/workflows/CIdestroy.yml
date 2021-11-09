@@ -1,0 +1,32 @@
+name: CI
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v1
+
+      - name: Terraform Init
+        working-directory: Terraform-AWS-Services-Creation/EKS-With-Worker-Nodes/
+        run: |
+          terraform init \
+            -backend-config "bucket=terraform-state-devopsthehardway-juan-am" \
+            -backend-config "key=eks-terraform-workernodes.tfstate"
+            
+      - name: Terraform Destroy
+        working-directory: Terraform-AWS-Services-Creation/EKS-With-Worker-Nodes/
+        run: terraform destroy
